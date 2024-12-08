@@ -1,3 +1,3 @@
-from django.shortcuts import render
+from django.shortcuts import *
+from django.contrib.auth import *
 
-# Create your views here.
