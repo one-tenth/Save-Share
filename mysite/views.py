@@ -10,7 +10,9 @@ def index(request):
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
+        phone = request.POST['phone']
         confirm_password = request.POST['confirm_password']
         
         if password != confirm_password:
@@ -20,8 +22,11 @@ def register(request):
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
             return redirect('register')
+        if User.objects.filter(phone=phone).exists():
+            messages.error(request, "phone already exists.")
+            return redirect('register')
 
-        user = User.objects.create_user(username=username, password=password)
+        user = User.objects.create_user(username=username,email=email, password=password, phone=phone)
         user.save()
 
         messages.success(request, "Account created successfully!")
