@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Member
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
 
-class MemberAdmin(admin.ModelAdmin):
-    list_display = ['username', 'id', 'borndate', 'gender', 'phoneNum']  # 確保列出你想顯示的字段
+class CustomUserAdmin(UserAdmin):
+    list_display=['username','password','phone']
 
-admin.site.register(Member, MemberAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
