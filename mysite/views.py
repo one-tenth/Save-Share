@@ -3,37 +3,52 @@ User = get_user_model()
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from .forms import PhoneForm
 
 def index(request):
     return render(request,'index.html')
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import PhoneForm
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
 def register(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        phone = request.POST['phone']
-        confirm_password = request.POST['confirm_password']
-        
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('register')
+        form = PhoneForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            password = form.cleaned_data['password']
+            confirm_password = form.cleaned_data['confirm_password']
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists.")
-            return redirect('register')
-        if User.objects.filter(phone=phone).exists():
-            messages.error(request, "phone already exists.")
-            return redirect('register')
+            # 檢查用戶名或電話號碼是否已存在
+            if User.objects.filter(username=username).exists():
+                messages.error(request, "用戶名已存在。")
+                return render(request, 'accounts/register.html', {'form': form})
+            if password != confirm_password:
+             messages.error(request, "Passwords do not match.")
+             return redirect('register')
 
-        user = User.objects.create_user(username=username,email=email, password=password, phone=phone)
-        user.save()
 
-        messages.success(request, "Account created successfully!")
-        login(request, user)  # 自動登入
-        return redirect('home')
+            # 創建用戶
+            user = User.objects.create_user(username=username, email=email, password=password,phone=phone)
+            # 如果使用自定義用戶模型，可以這樣設置電話號碼
+            # user.profile.phone = phone
+            user.save()
 
-    return render(request, 'accounts/register.html')
+            messages.success(request, "註冊成功！")
+            return redirect('home')
+        else:
+            return render(request, 'accounts/register.html', {'form': form})
+
+    # GET 請求
+    form = PhoneForm()
+    return render(request, 'accounts/register.html', {'form': form})
+
 
 
 from django.contrib.auth import authenticate, login, logout
