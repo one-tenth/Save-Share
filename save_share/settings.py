@@ -117,7 +117,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'  # 已有的設定
+STATICFILES_DIRS = [BASE_DIR / 'static',]  # 靜態文件所在的目錄
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # 收集後的目錄
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
