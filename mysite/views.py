@@ -23,15 +23,7 @@ def register(request):
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
-            confirm_password = form.cleaned_data['confirm_password']
-
-            # 檢查用戶名或電話號碼是否已存在
-            if User.objects.filter(username=username).exists():
-                messages.error(request, "用戶名已存在。")
-                return render(request, 'accounts/register.html', {'form': form})
-            if password != confirm_password:
-             messages.error(request, "Passwords do not match.")
-             return redirect('register')
+            # confirm_password = form.cleaned_data['confirm_password']
 
 
             # 創建用戶

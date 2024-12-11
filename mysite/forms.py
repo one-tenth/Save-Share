@@ -1,5 +1,8 @@
 from django import forms
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class PhoneForm(forms.Form):
     username = forms.CharField(
@@ -38,7 +41,21 @@ class PhoneForm(forms.Form):
         required=True,
         label="電話號碼"
     )
-#這裡我不太懂哈哈哈
+
+
+    # 自定義驗證用戶名是否存在
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("用戶名已存在。")
+        return username
+
+    # 自定義驗證電話號碼是否存在
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if User.objects.filter(phone=phone).exists():  # 假設電話號碼存儲在 `Profile` 模型中
+            raise ValidationError("電話號碼已存在。")
+        return phone
     def clean(self):
         """
         自定義驗證方法，用於檢查密碼是否一致。
