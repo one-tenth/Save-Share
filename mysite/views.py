@@ -1,18 +1,12 @@
-from django.contrib.auth import get_user_model
-User = get_user_model()
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import PhoneForm
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 def index(request):
     return render(request,'index.html')
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import PhoneForm
-from django.contrib.auth import get_user_model
-User = get_user_model()
 
 
 def register(request):
@@ -23,13 +17,10 @@ def register(request):
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
-            # confirm_password = form.cleaned_data['confirm_password']
 
 
             # 創建用戶
             user = User.objects.create_user(username=username, email=email, password=password,phone=phone)
-            # 如果使用自定義用戶模型，可以這樣設置電話號碼
-            # user.profile.phone = phone
             user.save()
 
             messages.success(request, "註冊成功！")

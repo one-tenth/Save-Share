@@ -1,8 +1,10 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import Member
+from .models import Member,Profile
 
-class MemberAdmin(UserAdmin):
-    list_display=['id','username','email','phone','date_joined']
+@admin.register(Member)
+class MemberAdmin(admin.ModelAdmin):
+    list_display = ['id', 'username', 'email', 'phone', 'date_joined']
 
-admin.site.register(Member, MemberAdmin)
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['id', 'member', 'bio']
