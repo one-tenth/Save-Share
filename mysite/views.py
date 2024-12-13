@@ -6,7 +6,9 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 def index(request):
-    return render(request,'index.html')
+    # 靜態內容直接渲染模板
+    return render(request, 'index.html')
+
 
 
 def register(request):
