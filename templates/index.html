@@ -10,10 +10,18 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <div class="auth-buttons">
-                <a href="register/" class="auth-btn register-btn">註冊</a>
-                <a href="login/" class="auth-btn login-btn">登入</a>
-            </div>
+            {% if user.is_authenticated %}
+                <!-- 顯示用戶名稱 -->
+                <div class="user-info">
+                    <span>歡迎使用者:{{ user.username }}</span>
+                </div>
+            {% else %}
+                <!-- 顯示註冊和登入按鈕 -->
+                <div class="auth-buttons">
+                    <a href="{% url 'register' %}" class="auth-btn register-btn">註冊</a>
+                    <a href="{% url 'login' %}" class="auth-btn login-btn">登入</a>
+                </div>
+            {% endif %}
         </header>
 
         <!-- Account Summary -->

@@ -31,11 +31,11 @@ class PhoneForm(forms.Form):
         label="確認密碼"
     )
     phone = forms.CharField(
-        max_length=10,
+        max_length=12,
         validators=[
             RegexValidator(
-                regex=r'^09\d{8}$',
-                message="親親您輸入錯了，請輸入有效的台灣電話號碼 (09開頭的10位數字)"
+                regex = r'^09\d{2}-\d{3}-\d{3}$',
+                message="親親您輸入錯了，請輸入有效的台灣電話號碼 "
             )
         ],
         required=True,
