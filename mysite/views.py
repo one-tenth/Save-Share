@@ -1,13 +1,16 @@
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import PhoneForm
+from .forms import *
 from django.contrib.auth import get_user_model
 User = get_user_model()
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     # 靜態內容直接渲染模板
-    return render(request, 'index.html')
+     records = Record.objects.filter(member=request.user)
+
+     return render(request, 'index.html', {'records': records,})
 
 
 
@@ -26,7 +29,7 @@ def register(request):
             user.save()
 
             messages.success(request, "註冊成功！")
-            return redirect('home')
+            return redirect('index')
         else:
             return render(request, 'accounts/register.html', {'form': form})
 
@@ -45,7 +48,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('index')
         else:
             messages.error(request, "Invalid credentials.")
             return redirect('login')
@@ -55,3 +58,46 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('login')
+
+#record
+@login_required  # 確保只有登入用戶才能訪問此視圖
+def record_input(request):
+    if request.method == 'POST':
+        record_form = RecordForm(request.POST)
+        if record_form.is_valid():
+            record = record_form.save(commit=False)  # 先保存但不提交
+            record.member = request.user  # 設置當前用戶為該交易的會員
+            record.save()  # 提交並保存交易記錄
+            return redirect('index')  # 提交後重定向回首頁
+
+    else:
+        record_form = RecordForm()
+
+    categories = Category.objects.all()  # 確保載入所有分類
+    category_form = CategoryForm()
+
+    records = Record.objects.filter(member=request.user)
+
+    return render(request, 'record_input.html', {
+        'record_form': record_form,
+        'category_form': category_form,
+        'categories': categories,
+        'records': records,  
+    })
+
+
+#管理分類
+def category_management(request):
+    categories = Category.objects.all()  # 確保獲取所有分類
+    
+    category_form = CategoryForm()
+
+    for category in categories:
+        print(category.category_ids)
+
+    return render(request, 'category_management.html', {
+        'categories': categories,
+        'category_form': category_form,
+    })
+
+ 

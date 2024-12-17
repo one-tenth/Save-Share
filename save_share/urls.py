@@ -19,8 +19,10 @@ from django.urls import path
 from mysite import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index,name='home'),
+    path('',views.index,name='index'),
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('record_input/', views.record_input, name='record_input'),
+    path('category_management/', views.category_management, name='category_management'),  # 顯示所有分類並管理
 ]

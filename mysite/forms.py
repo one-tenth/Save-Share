@@ -2,6 +2,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from .models import *
 User = get_user_model()
 
 class PhoneForm(forms.Form):
@@ -66,3 +67,17 @@ class PhoneForm(forms.Form):
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("密碼和確認密碼不一致，請重新輸入。")
         return cleaned_data
+    
+
+class RecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        fields = ['member', 'transaction_type', 'category', 'describe', 'price', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'})  # 使用內建的HTML5日期選擇控件
+        }
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['category_name']  # 使用者輸入類別名稱

@@ -20,3 +20,22 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.member.username}'s Profile"
+    
+class Category(models.Model):
+    category_id = models.AutoField(primary_key=True, verbose_name='分類編號')  # 分類編號作為主鍵
+    category_name = models.CharField(max_length=100, verbose_name='分類名稱')  # 分類名稱
+
+    def __str__(self):
+        return self.category_name  # 回傳分類名稱
+    
+class Record(models.Model):
+    recordNo = models.AutoField(primary_key=True, verbose_name='紀錄編號')
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, verbose_name='會員編號')
+    transaction_type = models.CharField(max_length=7,choices=[('income', '收入'), ('expense', '支出')],default='expense',verbose_name='收支')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='商品類別')  # 外鍵指向Category
+    describe = models.TextField(verbose_name='說明')
+    price = models.PositiveIntegerField(default=0, verbose_name='價格')
+    date = models.DateField(verbose_name='日期')
+
+    def __str__(self):
+        return str(self.recordNo)
