@@ -7,11 +7,13 @@ User = get_user_model()
 from django.contrib.auth.decorators import login_required
 
 def index(request):
-    # 靜態內容直接渲染模板
-     records = Record.objects.filter(member=request.user)
+    if not request.user.is_authenticated:
+        # 用戶未登入，重定向到登入頁面
+        return redirect('index')
 
-     return render(request, 'index.html', {'records': records,})
-
+    # 用戶已登入，查詢數據
+    records = Record.objects.filter(member=request.user)
+    return render(request, 'index.html', {'records': records})
 
 
 def register(request):
@@ -57,7 +59,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('index')
 
 #record
 @login_required  # 確保只有登入用戶才能訪問此視圖
