@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     if not request.user.is_authenticated:
         # 用戶未登入，重定向到登入頁面
-        return redirect('index')
+        return redirect('login')
 
     # 用戶已登入，查詢數據
     records = Record.objects.filter(member=request.user)
